@@ -3,12 +3,25 @@ from threading import Thread
 import facebook
 from random import *
 
+import requests
+
+def get_fb_token(app_id, app_secret):           
+    payload = {'grant_type': 'client_credentials', 'scope':'public_profile, user_friends, user_posts, publish_actions, user_tagged_places', 'client_id': app_id, 'client_secret': app_secret}
+    file = requests.post('https://graph.facebook.com/oauth/access_token?', params = payload)
+    #print file.text #to test what the FB api responded with    
+    result = file.text.split("=")[1]
+    #print file.text #to test the TOKEN
+    return result
+
 last_received = ''
 
 # Pegar o token quando o eze entra
 # token caso de merda - EAAWajIcUJAgBAKvLmCTxEEWd51gudNRwwwZC1md8nlttxrznK5knCidraWgIyibA2v3TRLSHYdJy8BKtGpuEoFZAI5E2SRTQS8C83HXZC5WhBmnBqDzZBO4HwdTzniTryvcqX47TfxxjoCbezCqloh4uRTfArNdTouNhVXv1zwZDZD
-graph = facebook.GraphAPI(access_token='EAACEdEose0cBAPABgJZCJ724E5HyHzZCG2LG59YKtTGcjrnrs2HOhS1dUNf5lyNeZCZC0RWxKp0YZCSDgs8d5vBzuO0iuhlalaKBw50HL7kKtrTVKjMZBwaZCE5IhUwz13XMI9VZBhq7RANo3jLgWdGdnMVOrrI9z0GKZAADZA5iGY4gZDZD', version='2.2')
+toke =  get_fb_token('1577303235896328','e46e9a642fc009965e2afb085617ccaa')
+# 'EAACEdEose0cBAHP3JmtXBaOQlLeMXTWbwnyLeQYkZCZANhw5KYG90DYOOZC4ZCHUpxy93KUGZB7FjZCIvZB4k1zabXZBA0uvxGyxqVFM3XHmEpAJ5QwRSPC78fUzk3bZCQEOQZBZBxWEWws0q9PKK0s5zlDYxvYr1ViiMBTl88wn6IUBQZDZD'
+graph =  facebook.GraphAPI(access_token=toke, version='2.2')
 
+print("PASSOU")
 
 
 # Checkin produto
